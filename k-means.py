@@ -1,6 +1,13 @@
 import os
+import random
 import numpy as np
 
+def create_centers(k):
+    centers = []
+    for i in range(k):
+        centers.append([random.randint(0,100),random.randint(0,100)])
+    return np.array(centers)
+        
 if __name__ == "__main__":
     p_choice = 0
     print("PROXIMITY MEASURES:\n\n1. Minkowski Distance\n2. \n3. Spearman Correlation")
@@ -12,4 +19,5 @@ if __name__ == "__main__":
         p_measure = 'p'
     elif(p_choice == 3):
         p_measure = 's'
-    k = int(input("How many clusters?"))
+    k = int(input("No. of clusters: "))
+    centers = create_centers(k)
