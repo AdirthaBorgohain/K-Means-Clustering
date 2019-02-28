@@ -9,6 +9,7 @@ def create_centers(k):
     return np.array(centers)
         
 if __name__ == "__main__":
+    data_points = np.genfromtxt("assets/data.csv", delimiter=",")
     p_choice = 0
     print("PROXIMITY MEASURES:\n\n1. Minkowski Distance\n2. \n3. Spearman Correlation")
     while p_choice not in [1, 2, 3]:
