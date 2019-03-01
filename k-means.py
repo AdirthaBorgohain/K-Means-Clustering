@@ -1,17 +1,29 @@
 import os
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 
+def plot_points(data_points):
+    x, y = data_points.T
+    plt.scatter(x,y)
+    plt.title("Unclustered Data")
+    plt.show
+    
 def create_centers(k):
     centers = []
     for i in range(k):
         centers.append([random.randint(0,100),random.randint(0,100)])
     return np.array(centers)
         
+def k_means(data_points, centers, p_measure):
+    return null
+    
+    
 if __name__ == "__main__":
     data_points = np.genfromtxt("assets/data.csv", delimiter=",")
+    plot_points(data_points)
     p_choice = 0
-    print("PROXIMITY MEASURES:\n\n1. Minkowski Distance\n2. \n3. Spearman Correlation")
+    print("PROXIMITY MEASURES:\n\n1. Minkowski Distance\n2. Pearson Correlation \n3. Spearman Correlation")
     while p_choice not in [1, 2, 3]:
         p_choice = int(input("Choose proximity measure to be used: "))
     if(p_choice == 1):
@@ -22,3 +34,4 @@ if __name__ == "__main__":
         p_measure = 's'
     k = int(input("No. of clusters: "))
     centers = create_centers(k)
+    [cluster, new_centers] = k_means(data_points, centers, p_measure)
