@@ -8,6 +8,11 @@ from decimal import Decimal
 def euclidean_distance(point, center):
     return np.sqrt(np.sum((point - center) ** 2))
 
+def minkowski_distance(x1, x2, r):  
+    return sum([abs(x-y)**r for x,y in zip(x1,x2)])**1/r
+
+# def pearson_correlation():
+
 def plot_points(data_points):
     x, y = data_points.T
     plt.scatter(x, y)
@@ -32,14 +37,18 @@ def k_means(data_points, centers, p_measure):
     cluster = []
     total_points = len(data_points)
     k = len(centers)
-
+    if(p_measure == 'm'):
+        r = int(input("Enter value of r: "))
     for epoch in range(0, 200):
         for index_point in range(0, total_points):
             distance = {}
             for center_index in range(0, k):
-                if(p_measure == 'm'):
+                if(p_measure == 'e'):
                     distance[center_index] = euclidean_distance(
                         data_points[index_point], centers[center_index])
+                elif(p_measure == 'm'):
+                    distance[center_index] = minkowski_distance(
+                        data_points[index_point], centers[center_index], r)
                 elif(p_measure == 'p'):
                     distance[center_index] = pearson_correlation(
                         data_points[index_point], centers[center_index])
@@ -64,14 +73,16 @@ if __name__ == "__main__":
     data_points = np.genfromtxt("assets/data.csv", delimiter=",")
     plot_points(data_points)
     p_choice = 0
-    print("PROXIMITY MEASURES:\n\n1. Minkowski Distance\n2. Pearson Correlation \n3. Spearman Correlation")
+    print("PROXIMITY MEASURES:\n\n1. Euclidean Distance\n2. Minkowski Distance\n3. Pearson Correlation \n4. Spearman Correlation")
     while p_choice not in [1, 2, 3]:
         p_choice = int(input("Choose proximity measure to be used: "))
     if(p_choice == 1):
-        p_measure = 'm'
+        p_measure = 'e'
     elif(p_choice == 2):
-        p_measure = 'p'
+        p_measure = 'm'
     elif(p_choice == 3):
+        p_measure = 'p'
+    elif(p_choice == 4):
         p_measure = 's'
     k = int(input("No. of clusters: "))
     centers = create_centers(k)
