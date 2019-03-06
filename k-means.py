@@ -1,22 +1,28 @@
-import os
 import random
 import numpy as np
 import matplotlib.pyplot as plt
 from math import *
 from decimal import Decimal
 
-def euclidean_distance(point, center):
-    return np.sqrt(np.sum((point - center) ** 2))
+def euclidean_distance(x1, x2):
+    return np.sqrt(np.sum((x1 - x2) ** 2))
 
 def minkowski_distance(x1, x2, r):  
     return sum([abs(x-y)**r for x,y in zip(x1,x2)])**1/r
 
-# def pearson_correlation():
+def pearson_correlation(x1, x2):
+    mean_x = sum(x1)/len(x1)
+    mean_y = sum(x2)/len(x2)
+    subtracted_mean_x = [i - mean_x for i in x1]
+    subtracted_mean_y = [i - mean_y for i in x2]
+    x_times_y = [a * b for a, b in list(zip(subtracted_mean_x, subtracted_mean_y))]
+    x_squared = [i * i for i in x1]
+    y_squared = [i * i for i in x2]
+    return sum(x_times_y) / sqrt(sum(x_squared) * sum(y_squared))
 
 def plot_points(data_points):
     x, y = data_points.T
     plt.scatter(x, y)
-    plt.title("Unclustered Data")
     plt.show
 
 def create_centers(k):
@@ -69,9 +75,22 @@ def print_cluster_data(result):
         print("cluster number: {} \n".format(data[0]))
     print("Last centroids position: \n {}".format(result[1]))
 
+
+def rearrange_clusters(k, result):
+    clusters = []
+    for cluster in range(k):
+        cluster_points = []
+        for data in result[0]:
+            if data[0] == cluster :
+                cluster_points.append(np.array(data[1]))
+        clusters.append(np.array(cluster_points))
+    return clusters
+
+
+
 if __name__ == "__main__":
     data_points = np.genfromtxt("assets/data.csv", delimiter=",")
-    plot_points(data_points)
+    #plot_points(data_points)
     p_choice = 0
     print("PROXIMITY MEASURES:\n\n1. Euclidean Distance\n2. Minkowski Distance\n3. Pearson Correlation \n4. Spearman Correlation")
     while p_choice not in [1, 2, 3]:
@@ -87,5 +106,7 @@ if __name__ == "__main__":
     k = int(input("No. of clusters: "))
     centers = create_centers(k)
     [cluster, new_centers] = k_means(data_points, centers, p_measure)
-    print_cluster_data([cluster, new_centers])
-    print()
+    clusters = rearrange_clusters(k, [cluster, new_centers])
+    #print(clusters)
+    for cluster in clusters:
+        plot_points(cluster)
